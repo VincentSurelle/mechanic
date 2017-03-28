@@ -28,7 +28,8 @@ var defaultSettings = {
   overrides: '/etc/nginx/mechanic-overrides',
   logs: '/var/log/nginx',
   restart: 'nginx -s reload',
-  bind: '*'
+  bind: '*',
+  certificates: '/etc/nginx/certs'
 };
 
 _.defaults(data, { settings: {} });
@@ -257,7 +258,6 @@ function validSiteFilter(site) {
 function go() {
 
   var sites = _.filter(data.sites, validSiteFilter);
-
   var template = fs.readFileSync(settings.template || (__dirname + '/template.conf'), 'utf8');
   var output = nunjucks.renderString(template, {
     sites: sites,
@@ -284,8 +284,6 @@ function go() {
   });
 
   fs.writeFileSync(settings.conf + '/mechanic.conf', output);
-
-  settings.certDir = '/etc/nginx/certs';
 
   if (settings.restart !== false) {
     var restart = settings.restart || 'service nginx reload';
