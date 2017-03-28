@@ -50,6 +50,7 @@ var aliases = {
 var options = {
   'host': 'string',
   'backends': 'addresses',
+  'backends-https': 'addresses',
   'aliases': 'strings',
   'canonical': 'boolean',
   'default': 'boolean',
@@ -258,11 +259,14 @@ function go() {
   var sites = _.filter(data.sites, validSiteFilter);
 
   var template = fs.readFileSync(settings.template || (__dirname + '/template.conf'), 'utf8');
-
+  console.log(sites);
+  console.log(settings);
   var output = nunjucks.renderString(template, {
     sites: sites,
     settings: settings
   });
+
+  console.log(output);
 
   // Set up include-able files to allow
   // easy customizations
